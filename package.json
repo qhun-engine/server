@@ -11,7 +11,8 @@
     "build:typescript": "./node_modules/.bin/tsc",
     "build:declaration": "./node_modules/.bin/tsc -p ./tsconfig.declaration.json",
     "lint": "./node_modules/.bin/tslint --project .",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
