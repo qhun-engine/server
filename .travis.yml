@@ -1,0 +1,22 @@
+language: node_js
+sudo: false
+
+os:
+  - linux
+  - osx
+  - windows
+
+node_js:
+- node
+
+install:
+  - npm install
+
+script:
+  - npm run build
+#  - npm run test:coverage
+#  - npm run lint
+
+cache:
+  directories:
+  - node_modules
