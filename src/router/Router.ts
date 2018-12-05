@@ -7,6 +7,7 @@ import { FileResponse } from "../controller/response/FileResponse";
 import { ServerReflectionMetadata } from "../constraint/ServerReflectionMetadata";
 import * as express from "express";
 import { RouterError } from "../error/RouterError";
+import { ServerOptions } from "../bootstrap/ServerOptions";
 
 @Injectable()
 export class Router {
@@ -21,7 +22,9 @@ export class Router {
      */
     private controllerStack: ClassConstructor[] = [];
 
-    constructor() {
+    constructor(
+        private options: ServerOptions
+    ) {
 
         // build a new router
         this.expressRouter = ExpressRouter({
@@ -122,7 +125,12 @@ export class Router {
         // what does handler returned?
         if (result && result instanceof FileResponse) {
 
-            response.sendFile(result.getPath());
+            // get the file path and prefix it
+            // with the document root path
+            const path = result.getPath();
+
+            // send the file
+            response.sendFile(`${this.options.getDocumentRoot}/${path}`);
         } else if (result && result instanceof Promise) {
 
             result

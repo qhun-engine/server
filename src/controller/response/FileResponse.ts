@@ -1,5 +1,3 @@
-import * as path from "path";
-
 export class FileResponse {
 
     constructor(
@@ -8,6 +6,6 @@ export class FileResponse {
 
     public getPath(): string {
 
-        return path.resolve(path.normalize(this.filePath));
+        return this.filePath;
     }
 }
