@@ -30,6 +30,7 @@ export function QhunEngineServer(options: BootstrapOptions = {}): ClassDecorator
         let expressApp: express.Application = serverOptions.getExistingExpressApp() as express.Application;
         if (!expressApp) {
             expressApp = express();
+            expressApp.disable("x-powered-by");
         }
 
         // use the configures router

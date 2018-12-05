@@ -5,9 +5,10 @@ import { ControllerMetadataStructure } from "../controller/Controller";
 import { RequestMappingStructure, HttpMethod } from "./RequestMapping";
 import { FileResponse } from "../controller/response/FileResponse";
 import { ServerReflectionMetadata } from "../constraint/ServerReflectionMetadata";
-import * as express from "express";
 import { RouterError } from "../error/RouterError";
 import { ServerOptions } from "../bootstrap/ServerOptions";
+import * as express from "express";
+import * as path from "path";
 
 @Injectable()
 export class Router {
@@ -68,12 +69,12 @@ export class Router {
             const requestMappingMetadata: RequestMappingStructure = metadataService.get(ServerReflectionMetadata.RequestMapping, controllerInstance);
 
             // iterate over every request mapping and add it to the router
-            Object.keys(requestMappingMetadata).forEach((path: keyof RequestMappingStructure) => {
+            Object.keys(requestMappingMetadata).forEach((requestPath: keyof RequestMappingStructure) => {
 
-                const settings = requestMappingMetadata[path];
+                const settings = requestMappingMetadata[requestPath];
                 this.addRequestMapping(
                     controllerMetadata.prefix,
-                    path as string,
+                    requestPath as string,
                     settings.method,
                     settings.handler,
                     `${controllerMetadata.name}@${settings.methodName}`
@@ -93,15 +94,15 @@ export class Router {
      * @param handler the handler function
      * @param name a visible name for debug purpose for this endpoint
      */
-    private addRequestMapping(prefix: string, path: string, method: HttpMethod, handler: ((...args: any[]) => any), name: string): void {
+    private addRequestMapping(prefix: string, requestPath: string, method: HttpMethod, handler: ((...args: any[]) => any), name: string): void {
 
         // add this request mapping
-        this.expressRouter[method](prefix + path, (request, response) => {
+        this.expressRouter[method](prefix + requestPath, (request, response) => {
             this.handleRouterResponse(request, response, handler);
         });
 
         // log this info
-        console.log(`[${method.toUpperCase()}] ${prefix + path} => ${name}`);
+        console.log(`[${method.toUpperCase()}] ${prefix + requestPath} => ${name}`);
     }
 
     /**
@@ -127,10 +128,13 @@ export class Router {
 
             // get the file path and prefix it
             // with the document root path
-            const path = result.getPath();
+            const filePath = result.getPath();
+
+            // express need a normalized absolute path. build it
+            const expressPath = path.resolve(path.normalize(path.join(this.options.getDocumentRoot()!, filePath)));
 
             // send the file
-            response.sendFile(`${this.options.getDocumentRoot}/${path}`);
+            response.sendFile(expressPath);
         } else if (result && result instanceof Promise) {
 
             result
