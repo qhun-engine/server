@@ -38,11 +38,19 @@ export class ServerOptions {
     }
 
     /**
-     * get the existing express router instance if any
+     * get the existing express app instance if any
      */
-    public getExistingExpressRouter(): BootstrapOptions["useExistingExpressRouter"] {
+    public getExistingExpressApp(): BootstrapOptions["useExistingExpressApp"] {
 
-        return this.bootstrapOptions.useExistingExpressRouter;
+        return this.bootstrapOptions.useExistingExpressApp;
+    }
+
+    /**
+     * get the existing http server instance if any
+     */
+    public getExistingHttpServer(): BootstrapOptions["useExistingHttpServer"] {
+
+        return this.bootstrapOptions.useExistingHttpServer;
     }
 
     /**

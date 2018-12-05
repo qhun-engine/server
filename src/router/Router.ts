@@ -7,7 +7,6 @@ import { FileResponse } from "../controller/response/FileResponse";
 import { ServerReflectionMetadata } from "../constraint/ServerReflectionMetadata";
 import * as express from "express";
 import { RouterError } from "../error/RouterError";
-import { ServerOptions } from "../bootstrap/ServerOptions";
 
 @Injectable()
 export class Router {
@@ -22,22 +21,12 @@ export class Router {
      */
     private controllerStack: ClassConstructor[] = [];
 
-    constructor(
-        options: ServerOptions
-    ) {
+    constructor() {
 
-        // build the express router router
-        const router = options.getExistingExpressRouter();
-        if (router) {
-
-            this.expressRouter = router;
-        } else {
-
-            // build a new router
-            this.expressRouter = ExpressRouter({
-                caseSensitive: false
-            });
-        }
+        // build a new router
+        this.expressRouter = ExpressRouter({
+            caseSensitive: false
+        });
     }
 
     /**

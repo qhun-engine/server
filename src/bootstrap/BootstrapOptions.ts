@@ -30,8 +30,8 @@ export interface BootstrapOptions {
     useExistingHttpServer?: http.Server;
 
     /**
-     * use the given existing express router and add new routes to it
+     * use the given existing express application and add a new router to it
      * @default undefined
      */
-    useExistingExpressRouter?: express.Router;
+    useExistingExpressApp?: express.Application;
 }
